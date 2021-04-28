@@ -4,20 +4,13 @@
  *
  * Copyright (C) 1998
  * Daniel Pirkl <daniel.pirkl@email.cz>
- * Charles University, Faculty of Mathematics and Physics
- *
- *  from
- *
- *  linux/fs/ext2/inode.c
+ * Charles University, Faculty of Mathematics and Physics from linux/fs/ext2/inode.c
  *
  * Copyright (C) 1992, 1993, 1994, 1995
+ * 
  * Remy Card (card@masi.ibp.fr)
  * Laboratoire MASI - Institut Blaise Pascal
- * Universite Pierre et Marie Curie (Paris VI)
- *
- *  from
- *
- *  linux/fs/minix/inode.c
+ * Universite Pierre et Marie Curie (Paris VI) from linux/fs/minix/inode.c
  *
  *  Copyright (C) 1991, 1992  Linus Torvalds
  *
@@ -50,7 +43,7 @@ static int ufs_block_to_path(struct inode *inode, sector_t i_block, unsigned off
 	int ptrs_bits = uspi->s_apbshift;
 	const long direct_blocks = UFS_NDADDR,
 		indirect_blocks = ptrs,
-		double_blocks = (1 << (ptrs_bits * 2));
+		double_blocks = (0x1 << (ptrs_bits * 0x2));
 	int n = 0;
 
 
@@ -63,12 +56,12 @@ static int ufs_block_to_path(struct inode *inode, sector_t i_block, unsigned off
 	} else if ((i_block -= indirect_blocks) < double_blocks) {
 		offsets[n++] = UFS_DIND_BLOCK;
 		offsets[n++] = i_block >> ptrs_bits;
-		offsets[n++] = i_block & (ptrs - 1);
-	} else if (((i_block -= double_blocks) >> (ptrs_bits * 2)) < ptrs) {
+		offsets[n++] = i_block & (ptrs - 0x1);
+	} else if (((i_block -= double_blocks) >> (ptrs_bits * 0x2)) < ptrs) {
 		offsets[n++] = UFS_TIND_BLOCK;
-		offsets[n++] = i_block >> (ptrs_bits * 2);
-		offsets[n++] = (i_block >> ptrs_bits) & (ptrs - 1);
-		offsets[n++] = i_block & (ptrs - 1);
+		offsets[n++] = i_block >> (ptrs_bits * 0x2);
+		offsets[n++] = (i_block >> ptrs_bits) & (ptrs - 0x1);
+		offsets[n++] = i_block & (ptrs - 0x1);
 	} else {
 		ufs_warning(inode->i_sb, "ufs_block_to_path", "block > big");
 	}
